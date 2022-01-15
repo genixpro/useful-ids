@@ -4,8 +4,11 @@ import React from "react";
 class ExampleIDGenerator extends React.Component {
     state = {
         enableCacheBuster: true,
+        enableTypeName: true,
         examples: [],
     }
+
+    timePerLetter = 150;
 
     constructor(props) {
         super(props);
@@ -17,17 +20,30 @@ class ExampleIDGenerator extends React.Component {
         this.generateAllFreshExamples();
 
         this.currentExampleReplacementIndex = 0;
-        setTimeout(() => {
-            this.timer = setInterval(() => {
-                this.replaceOneExampleWithFresh();
-            }, 2000);
-        }, 3000)
+        this.setupExampleRefreshTimer();
     }
 
     componentWillUnmount() {
+        this.clearExampleRefreshTimer();
+    }
+
+    setupExampleRefreshTimer() {
+        this.clearExampleRefreshTimer();
+
+        const example = this.generateExample();
+
+        const interval = example.length * this.timePerLetter + 1500;
+
+        this.timer = setInterval(() => {
+                this.replaceOneExampleWithFresh();
+            }, interval);
+    }
+
+    clearExampleRefreshTimer() {
         if (this.timer) {
             clearInterval(this.timer);
         }
+        this.timer = null;
     }
 
 
@@ -42,14 +58,34 @@ class ExampleIDGenerator extends React.Component {
         return str;
     }
 
+
+    generateRandomTypeName() {
+        const types = [
+            'user',
+            'artcl',
+            'cmnt',
+            'entry',
+            'token',
+            'paym',
+            'invc',
+        ]
+
+        const randomNumber = Math.floor((Math.random() * 100000)) % types.length;
+        return types[randomNumber];
+    }
+
     generateExample() {
-        let id = "";
+        let id = "-";
 
         if (this.state.enableCacheBuster) {
-            id += this.generateRandomString(4) + "-" + this.generateRandomString(4);
+            id += this.generateRandomString(4) + "-" + this.generateRandomString(4) + "-";
         }
 
-        return id;
+        if (this.state.enableTypeName) {
+            id += this.generateRandomTypeName(4) + "-";
+        }
+
+        return id.substr(1, id.length - 2);
     }
 
     generateAllFreshExamples() {
@@ -76,6 +112,9 @@ class ExampleIDGenerator extends React.Component {
         }
     }
 
+    togglePropertyField(field) {
+        this.setState({[field]: !this.state[field]}, () => this.setupExampleRefreshTimer());
+    }
 
 
     render() {
@@ -83,13 +122,15 @@ class ExampleIDGenerator extends React.Component {
             <div className="example-id-generator-wrapper">
                 <section className="example-id-generator">
                     <div className="examples-area">
+                        <h2>Examples</h2>
+
                         {
                             this.state.examples.map((example) =>
                             {
                                 return <div className={"single-example"} key={example}>
                                     {
                                         Array.from(example).map((letter, letterIndex) => {
-                                            return <span className={"single-example-letter"} key={letterIndex} style={{animationDelay: `${letterIndex*150}ms`}}>{letter}</span>
+                                            return <span className={"single-example-letter"} key={letterIndex} style={{animationDelay: `${letterIndex*this.timePerLetter}ms`}}>{letter}</span>
                                         })
                                     }
                                 </div>
@@ -97,13 +138,24 @@ class ExampleIDGenerator extends React.Component {
                         }
                     </div>
                     <div className="properties-area">
+                        <h2>Properties of the ID</h2>
+
                         <div>
                             <input
                                 type={"checkbox"}
                                 checked={this.state.enableCacheBuster}
-                                onChange={(evt) => this.setState({enableCacheBuster: !this.state.enableCacheBuster})}
+                                onChange={(evt) => this.togglePropertyField("enableCacheBuster")}
                             />
                             <span>Cache Buster</span>
+                        </div>
+
+                        <div>
+                            <input
+                                type={"checkbox"}
+                                checked={this.state.enableTypeName}
+                                onChange={(evt) => this.togglePropertyField("enableTypeName")}
+                            />
+                            <span>Type Name</span>
                         </div>
                     </div>
                 </section>

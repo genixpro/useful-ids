@@ -72,17 +72,17 @@ class Description extends React.Component {
                                 related information
                             </li>
                             <li>Dense - maximizes the entropy for the size of the ID and storage space it consumes</li>
-                            <li>Short - the ID should not be unnecessarily long. It should provide no more entropy then
+                            <li>Short - should not be unnecessarily long. It should provide no more entropy then
                                 is needed
                             </li>
-                            <li>Shardable - the IDs should go into structures like binary trees or hash tables in a
-                                balanced manner, without concentrating objects in just one part of the tree, hash table,
-                                or sharded cluster
+                            <li>Shardable - should go into binary trees and hash tables in a
+                                balanced manner, without concentrating objects in just one part of
+                                the data structure
                             </li>
-                            <li>Globally unique - uniquely identifies the string among all possible information systems,
-                                not just the context or environment its used in
+                            <li>Globally unique - the string should be completely unique among all information systems,
+                                not just the table, database, or organization it originates in
                             </li>
-                            <li>Created independently - the ID should be able to be created completely independently,
+                            <li>Independently - should be able to be created completely independently,
                                 without considering what other similar IDs are also being created at the same time
                             </li>
                             <li>Prefixed with a letter - some systems don't like IDs that start with numbers (e.g.
