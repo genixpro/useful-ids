@@ -1,0 +1,20 @@
+.description-section {
+    background-color: #dadada;
+    min-height: 30vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: left;
+}
+
+.description-id-example {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.description-text-area {
+    max-width: 60vw;
+    font-size: 14px;
+    color: black;
+    text-align: left;
+}
